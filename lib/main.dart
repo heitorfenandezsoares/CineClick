@@ -8,7 +8,7 @@ void main() {
 
   // ATENÇÃO: Insira aqui a sua chave de API v3 obtida no The Movie Database (TMDb):
   // https://www.themoviedb.org/settings/api
-  const String tmdbApiKey = 'COLOQUE_SUA_CHAVE_API_TMDB_AQUI';
+  const String tmdbApiKey = '5577763f4f97a1bd637ce81547de87d4';
 
   final tmdbService = TmdbService(apiKey: tmdbApiKey);
   final movieController = MovieController(service: tmdbService);

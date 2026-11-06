@@ -89,20 +89,17 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-              // Filtro dinâmico por classificação mínima
+              // Filtro dinâmico por faixa de classificação (evita que notas maiores vazem em categorias menores)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Row(
-                  children: [
-                    _buildFilterChip('Todos', 0.0),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('★ 6.0+', 6.0),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('★ 7.0+', 7.0),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('★ 8.0+', 8.0),
-                  ],
+                  children: MovieController.availableFilters.map((filter) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: _buildFilterChip(filter),
+                    );
+                  }).toList(),
                 ),
               ),
               const SizedBox(height: 6),
@@ -130,12 +127,12 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildFilterChip(String label, double rating) {
-    final isSelected = widget.controller.minRatingFilter == rating;
+  Widget _buildFilterChip(RatingFilter filter) {
+    final isSelected = widget.controller.selectedFilter == filter;
     return ChoiceChip(
-      label: Text(label),
+      label: Text(filter.label),
       selected: isSelected,
-      onSelected: (_) => widget.controller.setRatingFilter(rating),
+      onSelected: (_) => widget.controller.setRatingFilter(filter),
       selectedColor: Colors.tealAccent.withOpacity(0.25),
       labelStyle: TextStyle(
         color: isSelected ? Colors.tealAccent : Colors.white70,
@@ -217,7 +214,7 @@ class _HomeViewState extends State<HomeView> {
             TextButton(
               onPressed: () {
                 _searchController.clear();
-                widget.controller.setRatingFilter(0.0);
+                widget.controller.resetFilters();
                 widget.controller.fetchPopularMovies();
               },
               child: const Text('Redefinir Filtros'),
